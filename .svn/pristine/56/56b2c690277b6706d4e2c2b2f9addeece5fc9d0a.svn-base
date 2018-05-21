@@ -1,0 +1,49 @@
+package com.cn.hnust.controller;
+
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * 项目Controller
+ * 
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/quality")
+public class QualityController {
+
+	
+
+	private static final Log LOG = LogFactory.getLog(QualityController.class);
+
+	@RequestMapping("/addQuality")
+	public String showDetails(HttpServletRequest request,
+			HttpServletResponse response) {
+		String projectNo = request.getParameter("projectNo");
+		String roleNo = request.getParameter("roleNo");
+		String userId = request.getParameter("userId");
+		String userName = request.getParameter("userName");
+		
+		request.setAttribute("roleNo", roleNo);
+		request.setAttribute("userId", userId);
+		request.setAttribute("userName", userName);
+		request.setAttribute("projectNo", projectNo);
+		
+		return "detail";
+	}
+
+	
+	
+	
+
+}

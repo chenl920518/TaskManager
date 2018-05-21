@@ -1,0 +1,253 @@
+package com.cn.hnust.dao;
+
+import java.util.List;
+import java.util.Set;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.cn.hnust.pojo.Project;
+import com.cn.hnust.pojo.ProjectTask;
+
+public interface ProjectMapper {
+	int deleteByPrimaryKey(Integer id);
+
+	int insert(Project record);
+
+	int insertSelective(Project record);
+
+	/**
+	 * 根据登录的用户UserId查询所需项目
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	List<Project> findProjectList(Project project);
+
+	/**
+	 * 根据登录的用户UserId查询采购相关的项目
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findPurchaseProjectList(Project project);
+
+	int updateByPrimaryKeySelective(Project record);
+
+	int updateByPrimaryKey(Project record);
+
+	/**
+	 * 根据项目号查询项目详情
+	 * 
+	 * @param projectNo
+	 * @return
+	 */
+	Project selectProjctDetails(@Param("projectNo") String projectNo);
+
+	/**
+	 * 查询所有的项目
+	 * 
+	 * @return
+	 */
+	List<Project> selectAllProject();
+
+	/**
+	 * 批量添加项目信息
+	 * 
+	 * @param projectList
+	 */
+	void batchAddProject(List<Project> projectList);
+
+	/**
+	 * 查询CRM推送给来的订单信息是否存在
+	 * 
+	 * @param projectNo
+	 * @return
+	 */
+	Project selectProjectByProjectNo(@Param("projectNo") String projectNo);
+
+	/**
+	 * 查询交期变更的项目列表(管理员和销售共用)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findDelayProjectList(Project project);
+
+	/**
+	 * 查询交期变更的项目列表(采购)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findDelayProjectPurchaseList(Project project);
+
+	/**
+	 * 查询未设置实际交期的项目
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findSetDeliveryTimeList(Project project);
+
+	/**
+	 * 查询项目采购计划统计(管理员,销售)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectReportList(Project project);
+
+	/**
+	 * 查询项目采购计划统计(采购)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectReportPurchaseList(Project project);
+
+	/**
+	 * 缺少开工图片的项目(管理员,销售)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectReportNoPicList(Project project);
+
+	/**
+	 * 统计缺少开工图片的项目(采购)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectReportNoPicPurchaseList(Project project);
+
+	/**
+	 * 统计缺少任务汇报的项目
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectNoTaskReportList(Project project);
+
+	/**
+	 * 统计查詢延期的项目(管理员,销售)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectDelayCountList(Project project);
+
+	/**
+	 * 统计查詢延期的项目(采购)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectDelayPurchaseCountList(Project project);
+
+	/**
+	 * 查询未设置交期的项目统计(采购)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findSetDeliveryTimePurchaseList(Project project);
+
+	/**
+	 * 统计查询没有任务汇报的项目
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectNoTaskReportPurchaseList(Project project);
+
+	/**
+	 * 消息中心(销售)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> selectProjectRelationTask(Project project);
+
+	/**
+	 * 消息中心(采购)
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> selectPurchaseProjectRelationTask(Project project);
+
+	/**
+	 * 销售进来查看
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectReportMessage(Project project);
+
+	/**
+	 * 查询该销售下的采购
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> selectProjectPurchaseList(Project project);
+
+	/**
+	 * 查询记录条数销售登录
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findProjectListCount(Project project);
+
+	/**
+	 * 查询记录条数采购登录
+	 * 
+	 * @param project
+	 * @return
+	 */
+	List<Project> findPurchaseProjectListCount(Project project);
+
+	List<Project> selectProjectRelationTaskCount(Project project);
+
+	List<Project> selectPurchaseProjectRelationTaskCount(Project project);
+
+	List<Project> selectProjectList(
+			@Param("hasEmailUserId") boolean hasEmailUserId,
+			@Param("hasPurchaseId") boolean hasPurchaseId);
+
+	int updateFlogByProjectNo(@Param("set") Set<String> proSet);
+
+	int updateFlogByProjectNoFirst(@Param("set") Set<String> proSet);
+	
+	int updateaddFlogByProjectNoFirst(@Param("set") Set<String> proSet);
+
+	int updateaddFlogByProjectNo(@Param("set") Set<String> proSet);
+
+	/**
+	 * 
+	 * @Title:ProjectMapper
+	 * @Description:最近两个月项目列表
+	 * @author wangyang
+	 * @param projectTask
+	 * @return List<ProjectTask>
+	 * @throws
+	 */
+	List<ProjectTask> selectProject(ProjectTask projectTask);
+
+	/**
+	 * 
+	 * @Title:ProjectMapper
+	 * @Description:TODO
+	 * @author wangyang
+	 * @param projectTask
+	 * @return List<ProjectTask>
+	 * @throws
+	 */
+	List<ProjectTask> selectProjectCount(ProjectTask projectTask);
+	
+	
+	
+
+}

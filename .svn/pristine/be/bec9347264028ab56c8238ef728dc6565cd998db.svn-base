@@ -1,0 +1,219 @@
+package com.cn.hnust.service;
+
+import java.util.List;
+import java.util.Set;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.cn.hnust.pojo.Project;
+import com.cn.hnust.pojo.ProjectTask;
+
+/**
+ * 项目Service 接口
+ * @author Administrator
+ *
+ */
+public interface IProjectService {
+    /**
+     * 根据登录的id查询所属的项目列表(管理员和销售共用)
+     * @param id
+     * @return
+     */
+	public List<Project> findProjectList(Project project);
+	/**
+	 * 根据登录的id查询所属的项目列表(管理员和销售共用)记录数
+	 * @param project
+	 * @return
+	 */
+	public List<Project> findProjectListCount(Project project);
+	
+	/**
+	 * 根据登录的id查询所属的项目列表(采购)
+	 * @param project
+	 * @return
+	 */
+	public List<Project> findPurchaseProjectList(Project project);
+	/**
+	 * 根据登录的id查询所属的项目列表(采购)(总的记录数)
+	 * @param project
+	 * @return
+	 */
+	public List<Project> findPurchaseProjectListCount(Project project);
+	/**
+	 * 根据项目号查询项目详情
+	 * @param projectNo
+	 * @return
+	 */
+	public Project selectProjctDetails(String projectNo);
+	/**
+	 * 查询项目详情
+	 * @param projectNo
+	 * @return
+	 */
+	public Project showDetails(String projectNo);
+	/**
+	 * 修改项目基本信息(时间交货日期,原定交货日期)
+	 * @param project
+	 */
+	public void updateProjectInfo(Project project);
+	/**
+	 * 查询所有的项目信息
+	 * @return
+	 */
+	public List<Project> selectAllProject();
+	/***
+	 * 批量添加项目信息
+	 * @param projectList
+	 */
+	public void batchAddProject(List<Project> projectList);
+    /**
+     * 查询CRM推送的订单是否存在
+     * @param projectNo
+     * @return
+     */
+	Project selectProjectByProjectNo(String projectNo);
+	/**
+	 * 查询交期延误的项目列表 (管理员和销售共用)
+	 * @param project
+	 * @return
+	 */
+	public List<Project> findDelayProjectList(Project project);
+	/**
+	 * 查询交期延误的项目列表(采购)
+	 * @param project
+	 * @return
+	 */
+	public List<Project> findDelayProjectPurchaseList(Project project);
+	/**
+	 * 查询未设置交期的项目统计(销售,管理员共用)
+	 * @param project
+	 * @return
+	 */
+	public List<Project> findSetDeliveryTimeList(Project project);
+	
+	/**
+	 * 查询未设置交期的项目统计(采购)
+	 * @param project
+	 * @return
+	 */
+	public List<Project> findSetDeliveryTimePurchaseList(Project project);
+	/**
+	 * 查询项目的采购汇报(管理员,销售)
+	 * @param project
+	 * @return
+	 */
+    public List<Project> findProjectReportList(Project project);
+    /**
+	 * 查询项目的采购汇报(采购)
+	 * @param project
+	 * @return
+	 */
+    public List<Project> findProjectReportPurchaseList(Project project);
+    /**
+     * 统计项目缺少开工图片的项目(管理员,销售)
+     * @param project
+     * @return
+     */
+    public List<Project> findProjectReportNoPicList(Project project);
+    /**
+     * 统计项目缺少开工图片的项目(采购)
+     * @param project
+     * @return
+     */
+	public List<Project> findProjectReportNoPicPurchaseList(Project project);
+    /**
+     * 统计没有任务汇报的项目(管理员，销售)
+     * @param project
+     * @return
+     */
+    public List<Project> findProjectNoTaskReportList(Project project);
+    /**
+     * 统计没有任务汇报的项目(采购)
+     * @param project
+     * @return
+     */
+	public List<Project> findProjectNoTaskReportPurchaseList(Project project);
+	/**
+	 * 查询统计延期的项目(管理员，销售)
+	 * @param project
+	 * @return
+	 */
+    public List<Project> findProjectDelayCountList(Project project);
+    /**
+	 * 查询统计延期的项目(采购)
+	 * @param project
+	 * @return
+	 */
+    public List<Project> findProjectDelayPurchaseCountList(Project project);
+    
+    /**
+     * 查询采购报告(消息中心销售)
+     * @param project
+     * @return
+     */
+    public List<Project> selectProjectRelationTask(Project project);
+    
+    public List<Project> selectProjectRelationTaskCount(Project project);
+    /**
+     * 查询采购报告(消息中心采购)
+     * @param project
+     * @return
+     */
+    public List<Project> selectPurchaseProjectRelationTask(Project project);
+    
+    public List<Project> selectPurchaseProjectRelationTaskCount(Project project);
+    /**
+     * 查询采购项目信息(销售进来查看是否有的信息)
+     * @param project
+     * @return
+     */
+    public List<Project> findProjectReportMessage(Project project);
+    /**
+     * 添加项目信息
+     * @param project
+     */
+    public void addProject(Project project);
+    /**
+     * 查询该销售下面的采购
+     * @param project
+     * @return
+     */
+    public List<Project> selectProjectPurchaseList(Project project);
+    
+    
+    public  List<Project> selectProjectList(boolean hasEmailUserId,boolean hasPurchaseId);
+    
+    
+    int updateFlogByProjectNo(Set<String> proSet);
+    
+    int updateFlogByProjectNoFirst(Set<String> proSet);
+    
+    int updateaddFlogByProjectNoFirst(Set<String> proSet);
+    
+    int updateaddFlogByProjectNo(Set<String> proSet);
+    /**
+     * 
+     * @Title:IProjectService
+     * @Description:查看用户最近两个月项目列表
+       @author wangyang
+     * @param projectTask
+     * @return List<ProjectTask>
+     * @throws
+     */
+	public List<ProjectTask> selectProject(ProjectTask projectTask);
+	/**
+	 * 
+	 * @Title:IProjectService
+	 * @Description:查看用户最近两个月项目列表数
+	   @author wangyang
+	 * @param projectTask
+	 * @return List<ProjectTask>
+	 * @throws
+	 */
+	public List<ProjectTask> selectProjectCount(ProjectTask projectTask);
+	
+	
+	
+	
+   
+}

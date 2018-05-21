@@ -1,0 +1,75 @@
+package com.cn.hnust.service.impl.task;
+
+import java.util.Date;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import com.cn.hnust.pojo.Project;
+import com.cn.hnust.pojo.ProjectReport;
+import com.cn.hnust.service.IProjectReportService;
+import com.cn.hnust.service.IProjectService;
+
+@Component
+public class ProjectDateTask {
+	@Autowired
+	private IProjectService projectService;
+	
+	@Autowired
+	private IProjectReportService projectReportService;
+	@Scheduled(cron = "0 0/30 9,18 * * ?")
+	public void work() throws Exception{
+       syncProjectDate();
+	}
+    //定时任务定时更新数据库排序字段优先级
+	@Transactional
+	public void syncProjectDate() throws Exception{
+			List<Project> projectList=projectService.findProjectListCount(null);// 项目列表	
+			//添加排序字段,最终根据排序字段进行排序
+			int sortField=1;
+			Date today = new Date();
+			for (Project sortProject : projectList) {
+				// 判断项目状态
+				if (sortProject.getFinish()==0) {
+					if (sortProject.getIsPause() == null
+							|| "0".equals(sortProject.getIsPause())) {
+						List<ProjectReport> pr = projectReportService
+								.selectProjectReport(sortProject.getProjectNo());
+						if (pr != null && pr.size() > 0) {//正常进行中的项目
+							sortField = 2;
+						} else {//新创建的项目
+							sortField = 1;
+						}
+						if (sortProject.getDeliveryDate() != null
+								&& sortProject.getDeliveryDate().getTime() < today
+										.getTime()
+								&& sortProject.getFinish() == 0) {
+							//延期项目判断本周是否更新过周报
+							List<ProjectReport> projectReportList = projectReportService.selectProjectReportWeek(sortProject.getProjectNo());
+							if(projectReportList!=null && projectReportList.size()>0){//延期更新了周报
+								sortField=4;
+							}else{//延期没更新周报
+								sortField=3;
+							}
+						}
+					} else if ("1".contains(sortProject.getIsPause())) {
+						sortField =5;
+
+					} else if ("2".contains(sortProject.getIsPause())) {
+						sortField = 6;
+					}
+				} else if (sortProject.getFinish()==1) {
+					sortField = 7;
+				}else{
+					sortField=1;
+				}
+				sortProject.setSortField(sortField);
+				
+				Project updateProject=new Project();
+				updateProject.setProjectNo(sortProject.getProjectNo());
+				updateProject.setSortField(sortField);
+				projectService.updateProjectDataSortField(updateProject);
+			}
+		}
+	}

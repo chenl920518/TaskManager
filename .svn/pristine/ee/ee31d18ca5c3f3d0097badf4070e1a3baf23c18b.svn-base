@@ -1,0 +1,34 @@
+package com.cn.hnust.util;
+
+import java.io.IOException;
+import java.util.Properties;
+
+public class UploadAndDownloadPathUtil {  
+    private static Properties p = new Properties();  
+  
+    /** 
+     * 读取properties配置文件信息 
+     */  
+    static{  
+        try {  
+            p.load(UploadAndDownloadPathUtil.class.getClassLoader().getResourceAsStream("upLoadAndDownLoadPath.properties"));  
+        } catch (IOException e) {  
+            e.printStackTrace();   
+        }  
+    }  
+   
+    
+    public static String getProjectImg(){
+    	return p.getProperty("project_img");  	
+    }
+    
+    public static String getProjectStatic(){
+    	return p.getProperty("project_static");  	
+    }
+   
+}  
+	
+	
+
+
+

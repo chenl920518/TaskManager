@@ -1,0 +1,129 @@
+package com.cn.hnust.service.impl.task;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.cn.hnust.pojo.ExcelProjectData;
+import com.cn.hnust.pojo.Project;
+import com.cn.hnust.pojo.User;
+import com.cn.hnust.service.IExcelProjectDataService;
+import com.cn.hnust.service.IProjectService;
+import com.cn.hnust.service.IUserService;
+import com.cn.hnust.util.IdGen;
+
+
+@Service
+public class ExcelProjectDataTask {
+
+	@Autowired
+	private IExcelProjectDataService excelProjectDataService;
+	
+	@Autowired
+	private IProjectService projectService;
+	
+	@Autowired
+	private IUserService userService;
+	
+	//处理Excel数据
+	@Transactional
+	public void syncProjectDate(){
+		try {
+			List<ExcelProjectData> ExcelProjectDataList=excelProjectDataService.findAllExcelProjectData();
+			List<Project> projectList=projectService.selectAllProject(); //外贸采购系统原有的数据
+			List<Project> insertProjectList=new ArrayList<Project>(); //需要插入的数据集合
+			boolean flag=false;
+			//执行业务逻辑
+			for(int i=0;i<ExcelProjectDataList.size();i++){
+				ExcelProjectData  excelProjectData= ExcelProjectDataList.get(i);
+				Project project = null;
+				boolean bool = false;
+				for (int j = 0; j < projectList.size(); j++) {
+					project = projectList.get(j);
+					//项目号匹配成功不做任何操作
+					if(excelProjectData.getProjectNo().equals(project.getProjectNo())){
+						bool = true;
+						break;
+					}
+				}
+				//项目号匹配不成功,将不匹配的项目号添加到项目表里面
+				if(!bool){
+					Project insertProject = new Project();
+					insertProject.setId(IdGen.uuid());
+					insertProject.setProjectNo(excelProjectData.getProjectNo());
+					insertProject.setProjectName(excelProjectData.getProjectName());
+					insertProject.setDeliveryDate(excelProjectData.getDeliveryDate()); //交期
+					String projectStatus=excelProjectData.getProjectStatue(); //项目各种状态
+					String orderStatus=excelProjectData.getOrderStatus();//项目是否完成
+					if(StringUtils.isNotBlank(projectStatus)){//项目的各种状态
+					  //1.交期状态
+					  if(projectStatus.equals("延期")){//交期延期
+						insertProject.setDeliveryStatus(1);
+					  }else if(projectStatus.equals("正常")){//交期正常
+						insertProject.setDeliveryStatus(0);
+					  }else if(projectStatus.equals("暂停")){
+						insertProject.setDeliveryStatus(2); 
+					  }else{
+						insertProject.setDeliveryStatus(0); 
+					  }
+					  //2.项目阶段
+					  if(projectStatus.equals("样品")){//
+						insertProject.setStage(0);
+					  }else if(projectStatus.equals("大货")){//
+						  insertProject.setStage(1);
+					  }else if(projectStatus.equals("成熟项目")){
+						  insertProject.setStage(2);
+					  }
+					}else{
+						insertProject.setDeliveryStatus(0);
+						insertProject.setStage(0);
+					}
+					if(StringUtils.isNotBlank(orderStatus)){//项目是否完成
+						if(orderStatus.equals("未完成")){
+						   insertProject.setFinish(0);
+						}else if(orderStatus.equals("已完成")){
+						   insertProject.setFinish(1);
+						}else{
+						   insertProject.setFinish(1);
+						}
+					}else{
+						insertProject.setFinish(1);
+					}
+					insertProject.setWarningStatus(0);
+					insertProject.setImportance(0);
+					User user= new User();
+					String purchaseName=excelProjectData.getPurchaseName();
+					user=userService.findUserByName(purchaseName);
+					if(user!=null){
+						insertProject.setPurchaseId(user.getId());
+					}
+									
+					String salesName=excelProjectData.getSalesName();
+					user=userService.findUserByName(salesName);
+					if(user!=null){
+						insertProject.setEmailUserId(user.getId());
+					}
+					insertProject.setPoDate(null);  //PO日期
+					insertProject.setActualStartDate(excelProjectData.getCreateDate());  //实际开工日期
+					insertProject.setScheduledDate(excelProjectData.getCreateDate());  //实际开工日期
+					insertProject.setCreateDate(excelProjectData.getCreateDate());
+					insertProjectList.add(insertProject);
+				}
+			 }
+			 //批量插入
+			 if(!flag){
+				 if(insertProjectList.size()>0 && insertProjectList!=null ){
+				   projectService.batchAddProject(insertProjectList);
+				  flag=true;
+				 }
+			 }
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+		}
+	}
+}

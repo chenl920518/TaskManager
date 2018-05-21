@@ -1,0 +1,93 @@
+.clearfix:before,
+.clearfix:after {
+  content: "";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+.clearfix {
+  zoom: 1;
+}
+.test_report{
+	width:1200px;
+	margin:0 auto;
+	min-height:50px;
+	font-size:16px;
+	padding-top:20px;
+	text-align:center;
+}
+.row{
+	margin:0;
+}
+.row1 button{
+	float:left;
+	height:30px;
+	background-color:#fff;
+	border:1px solid #bbb;
+	margin-right:20px;
+}
+.row1 select,.row1 span{
+	width:50%;
+	float:left;
+	font-weight:normal;
+	font-size:16px;
+}
+.div1{
+	width:300px;
+	margin-right:20px;
+}
+.test_report .row1 select{
+	height:30px;
+	padding-top:2px;
+}
+.test_report .row1 span{
+	margin-top:5px;
+}
+.test_report .form-inline{
+	text-align:left;
+	margin-bottom:10px;
+}
+.test_report .form-inline input{
+	width:260px;
+}
+.test_report .form-inline .form-group{
+	margin-right:15px;
+}
+.test_report .p1{
+	text-a
+}
+.test_report .table1 button{
+	width:60px;
+}
+.test_report .table1 th{
+	text-align:center;
+}
+.test_report .table1 input[type="checkbox"]{
+	height:16px;
+	width:16px;
+	/* margin:0 auto; */
+	display:inline-block;
+}
+.test_report .tips p{
+	text-align:left;
+}
+.test_report .t_j{
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

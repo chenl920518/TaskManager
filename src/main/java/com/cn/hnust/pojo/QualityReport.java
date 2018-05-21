@@ -1,0 +1,162 @@
+package com.cn.hnust.pojo;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+public class QualityReport implements Serializable {
+    private Integer id;
+
+    private Integer status;
+
+    private Integer type;
+
+    private String picUrl;
+
+    private Date createtime;
+
+    private String user;
+
+    private String projectNo;
+    
+    private String typeView;
+    
+    private String statusView;
+    
+    private String explainCause;
+
+    private static final long serialVersionUID = 1L;
+    
+    
+    private String detailView;
+    
+    private String[] picUrls;
+    
+    
+    private List<ProjectTask> projectTaskList;
+    
+    private String createtimeView;
+    
+    private String qualityReportUrl;
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl == null ? null : picUrl.trim();
+    }
+
+    public Date getCreatetime() {
+        return createtime;
+    }
+
+    public void setCreatetime(Date createtime) {
+        this.createtime = createtime;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user == null ? null : user.trim();
+    }
+
+    public String getProjectNo() {
+        return projectNo;
+    }
+
+    public void setProjectNo(String projectNo) {
+        this.projectNo = projectNo == null ? null : projectNo.trim();
+    }
+
+	public String getTypeView() {
+		return typeView;
+	}
+
+	public void setTypeView(String typeView) {
+		this.typeView = typeView;
+	}
+
+	public String getDetailView() {
+		return detailView;
+	}
+
+	public void setDetailView(String detailView) {
+		this.detailView = detailView;
+	}
+
+	public List<ProjectTask> getProjectTaskList() {
+		return projectTaskList;
+	}
+
+	public void setProjectTaskList(List<ProjectTask> projectTaskList) {
+		this.projectTaskList = projectTaskList;
+	}
+
+	public String getStatusView() {
+		return statusView;
+	}
+
+	public void setStatusView(String statusView) {
+		this.statusView = statusView;
+	}
+
+	public String[] getPicUrls() {
+		return picUrls;
+	}
+
+	public void setPicUrls(String[] picUrls) {
+		this.picUrls = picUrls;
+	}
+
+	public String getCreatetimeView() {
+		return createtimeView;
+	}
+
+	public void setCreatetimeView(String createtimeView) {
+		this.createtimeView = createtimeView;
+	}
+
+	public String getExplainCause() {
+		return explainCause;
+	}
+
+	public void setExplainCause(String explainCause) {
+		this.explainCause = explainCause;
+	}
+
+	public String getQualityReportUrl() {
+		return qualityReportUrl;
+	}
+
+	public void setQualityReportUrl(String qualityReportUrl) {
+		this.qualityReportUrl = qualityReportUrl;
+	}
+	
+}

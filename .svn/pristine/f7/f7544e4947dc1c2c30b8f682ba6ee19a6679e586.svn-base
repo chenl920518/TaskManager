@@ -1,0 +1,83 @@
+package com.cn.hnust.pojo;
+
+import java.io.Serializable;
+import java.util.Date;
+/**
+ * 项目延期信息 对象
+ * @author Administrator
+ *
+ */
+public class Delay implements Serializable {
+    private String id;
+
+    private String projectNo;
+
+    private String internalCause;
+
+    private String externalCause;
+
+    private Date delayDate;
+
+    private Integer type;
+
+    private Date createDate;
+
+    private static final long serialVersionUID = 1L;
+
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getProjectNo() {
+        return projectNo;
+    }
+
+    public void setProjectNo(String projectNo) {
+        this.projectNo = projectNo == null ? null : projectNo.trim();
+    }
+
+    public String getInternalCause() {
+        return internalCause;
+    }
+
+    public void setInternalCause(String internalCause) {
+        this.internalCause = internalCause == null ? null : internalCause.trim();
+    }
+
+    public String getExternalCause() {
+        return externalCause;
+    }
+
+    public void setExternalCause(String externalCause) {
+        this.externalCause = externalCause == null ? null : externalCause.trim();
+    }
+
+    public Date getDelayDate() {
+        return delayDate;
+    }
+
+    public void setDelayDate(Date delayDate) {
+        this.delayDate = delayDate;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+}

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.hnust.dao.DelayMapper" >
+  <resultMap id="BaseResultMap" type="com.cn.hnust.pojo.Delay" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="project_no" property="projectNo" jdbcType="VARCHAR" />
+    <result column="internal_cause" property="internalCause" jdbcType="VARCHAR" />
+    <result column="external_cause" property="externalCause" jdbcType="VARCHAR" />
+    <result column="delay_date" property="delayDate" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_no, internal_cause, external_cause, delay_date, type, create_date
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from delay
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 查询项目的延期信息 -->
+  <select id="selectDelayByProjectNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from delay
+    where project_no = #{projectNo,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询项目的最大延期时间 -->
+  <select id="selectMaxDelayByProjectNo" resultMap="BaseResultMap" parameterType="java.lang.String" >
+      select *from delay where delay_date = (select MAX(delay_date) 
+      from delay  where  1=1
+      <if test="projectNo != null" >
+       AND project_no=#{projectNo,jdbcType=VARCHAR}
+      </if>
+      )
+     <if test="projectNo != null" >
+      AND project_no=#{projectNo,jdbcType=VARCHAR}
+     </if>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from delay
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.hnust.pojo.Delay" >
+    insert into delay (id, project_no, internal_cause, 
+      external_cause, delay_date, type, 
+      create_date)
+    values (#{id,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, #{internalCause,jdbcType=VARCHAR}, 
+      #{externalCause,jdbcType=VARCHAR}, #{delayDate,jdbcType=TIMESTAMP}, #{type,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.hnust.pojo.Delay" >
+    insert into delay
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectNo != null" >
+        project_no,
+      </if>
+      <if test="internalCause != null" >
+        internal_cause,
+      </if>
+      <if test="externalCause != null" >
+        external_cause,
+      </if>
+      <if test="delayDate != null" >
+        delay_date,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectNo != null" >
+        #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="internalCause != null" >
+        #{internalCause,jdbcType=VARCHAR},
+      </if>
+      <if test="externalCause != null" >
+        #{externalCause,jdbcType=VARCHAR},
+      </if>
+      <if test="delayDate != null" >
+        #{delayDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.hnust.pojo.Delay" >
+    update delay
+    <set >
+      <if test="projectNo != null" >
+        project_no = #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="internalCause != null" >
+        internal_cause = #{internalCause,jdbcType=VARCHAR},
+      </if>
+      <if test="externalCause != null" >
+        external_cause = #{externalCause,jdbcType=VARCHAR},
+      </if>
+      <if test="delayDate != null" >
+        delay_date = #{delayDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.hnust.pojo.Delay" >
+    update delay
+    set project_no = #{projectNo,jdbcType=VARCHAR},
+      internal_cause = #{internalCause,jdbcType=VARCHAR},
+      external_cause = #{externalCause,jdbcType=VARCHAR},
+      delay_date = #{delayDate,jdbcType=TIMESTAMP},
+      type = #{type,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,94 @@
+package com.cn.hnust.service.impl.task;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.cn.hnust.pojo.Delay;
+import com.cn.hnust.pojo.Project;
+import com.cn.hnust.service.IDelayService;
+import com.cn.hnust.service.IProjectService;
+import com.cn.hnust.util.HttpClient;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+@Service
+public class ProjectDateDeliveryTask {
+	@Autowired
+	private IProjectService projectService;
+	
+	@Autowired
+	private IDelayService delayService;
+	
+    //定时任务的同步数据(项目信息)
+	@Transactional
+	public void syncProjectDate() throws Exception{
+	  /*//1.查询所有的项目列表
+	  List<Project> projectDataList=new ArrayList<Project>();
+	  List<Project> dataList=projectService.selectAllProject();
+	  String delayType;
+	  for (int i = 0; i < dataList.size(); i++) {
+		 Project project=dataList.get(i);
+		 //2.查询每个项目的交期,是否有延期，延期就将交期值设置修改
+		 Delay delay=delayService.selectMaxDelayByProjectNo(project.getProjectNo());
+		 int numberDays;
+		 if(project.getFinish()==1){//项目状态是完成的
+			 if(delay!=null){//如果不等于null,就代表延期了,否则延期
+				 numberDays=daysBetween(project.getDeliveryDate(),delay.getDelayDate());
+				 if(numberDays==0){//无延期
+					 delayType="0"; 
+				 }else if(numberDays>0 && numberDays<5){//延期5天之内
+					 delayType="1"; 
+				 }else if(numberDays>=5 && numberDays<10){
+					 delayType="2"; 
+				 }else if(numberDays>=10 && numberDays<14){
+					 delayType="3";  
+				 }else if(numberDays>=14 && numberDays<21){
+					 delayType="4";
+				 }else {
+					 delayType="5"; 
+				 }
+			 }else{
+				delayType="0";
+			 } 
+			 project.setDelayType(delayType);
+			 projectDataList.add(project);
+		 }
+	  }
+	  try {
+		  Map<String, String> parameters=new HashMap<String, String>();
+		  JSONArray object = JSONArray.fromObject(projectDataList);
+		  parameters.put("projectDelivery", object.toString());
+		  HttpClient.sendPost("http://192.168.1.129:8080/bonus-system/project/syncProjectDelivery", parameters);
+	  } catch (Exception e) {
+		e.printStackTrace();
+	  }*/
+	}
+	/**
+	 * 计算交期之间相差的天数
+	 * @param smdate
+	 * @param bdate
+	 * @return
+	 * @throws ParseException
+	 */
+	public static int daysBetween(Date smdate,Date bdate) throws ParseException{    
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
+        smdate=sdf.parse(sdf.format(smdate));  
+        bdate=sdf.parse(sdf.format(bdate));  
+        Calendar cal = Calendar.getInstance();    
+        cal.setTime(smdate);    
+        long time1 = cal.getTimeInMillis();                 
+        cal.setTime(bdate);    
+        long time2 = cal.getTimeInMillis();         
+        long between_days=(time2-time1)/(1000*3600*24);     
+        return Integer.parseInt(String.valueOf(between_days));           
+    }    
+	
+}

@@ -1,0 +1,10 @@
+package com.cn.hnust.util;
+
+public class Demo {
+
+	public static void main(String args[]){
+		String fileUrl="http://192.168.1.201:9009/uploadimg/613c3cf6-f5bd-4cac-9517-56d6388f5f76.jpg";
+		String image = fileUrl.substring(fileUrl.lastIndexOf("/")+1);
+		System.out.println(image);
+	}
+}

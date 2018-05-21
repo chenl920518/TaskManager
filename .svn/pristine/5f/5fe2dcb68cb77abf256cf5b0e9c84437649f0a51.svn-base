@@ -1,0 +1,78 @@
+package com.cn.hnust.controller;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import com.cn.hnust.pojo.ProjectDrawing;
+import com.cn.hnust.service.IProjectDrawingService;
+import com.cn.hnust.util.IdGen;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+@Controller
+@RequestMapping("/projectDrawing")
+public class ProjectDrawingController {
+   
+	@Autowired
+	private IProjectDrawingService projectDrawingService;
+	
+	@RequestMapping(value = "/synchProjectDrawing", method = RequestMethod.POST)
+	public void synchProjectDrawing(HttpServletRequest request,@RequestParam Map<String,String> map)
+			throws Exception {
+		 String jsonStr = map.get("projectDrawing");
+		 JSONArray json = JSONArray.fromObject(jsonStr); // 首先把字符串转成 JSONArray  对象
+		 List<ProjectDrawing> projectDrawingList=new ArrayList<ProjectDrawing>();
+		 if(json.size()>0){
+			  for(int i=0;i<json.size();i++){
+			    JSONObject obj = json.getJSONObject(i);  // 遍历 jsonarray 数组，把每一个对象转成 json 对象
+			    String projectNo = (String) obj.get("projectNo");	
+			    String drawingName=(String) obj.get("drawingName");
+			    Integer category=(Integer) obj.get("category");
+				ProjectDrawing projectDrawing=new ProjectDrawing();
+				projectDrawing.setId(IdGen.uuid());
+				projectDrawing.setProjectNo(projectNo);
+				projectDrawing.setDrawingName(drawingName);
+				projectDrawing.setCreateDate(new Date());
+				projectDrawing.setCategory(String.valueOf(category));
+				projectDrawingList.add(projectDrawing);
+			  }
+		 }
+		 //1.查询原有的数据
+		 //2.将同步的数据与原有数据进行对比
+		 List<ProjectDrawing> projectList=projectDrawingService.selectAllProjectDrawing();
+		 //List<ProjectDrawing> insertProjectList=new ArrayList<ProjectDrawing>(); //需要插入的数据集合
+         for(int i=0;i<projectDrawingList.size();i++){
+        	ProjectDrawing  projectDrawing= projectDrawingList.get(i);
+        	ProjectDrawing project = null;
+			boolean bool = false;
+			for (int j = 0; j < projectList.size(); j++) {
+				project = projectList.get(j);
+				//项目号匹配成功和名字匹配成功不做任何操作
+				if(projectDrawing.getProjectNo().equals(project.getProjectNo())&& projectDrawing.getDrawingName().equals(project.getDrawingName())){
+					bool = true;
+					break;
+				}
+			}
+			//项目号匹配不成功,将不匹配的项目号添加到项目表里面
+			if(!bool){
+				ProjectDrawing insertProject = new ProjectDrawing();
+				insertProject.setId(IdGen.uuid());
+				insertProject.setProjectNo(projectDrawing.getProjectNo());
+				insertProject.setDrawingName(projectDrawing.getDrawingName());
+				insertProject.setCategory(projectDrawing.getCategory());
+				insertProject.setCreateDate(new Date());
+				//insertProjectList.add(insertProject);
+				projectDrawingService.addProjectDrawing(insertProject);
+			}
+		  }
+         //projectDrawingService.batchAddProjectDrawing(insertProjectList);
+	}
+}

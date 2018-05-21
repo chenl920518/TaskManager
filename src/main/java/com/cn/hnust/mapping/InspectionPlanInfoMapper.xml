@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cn.hnust.dao.InspectionPlanInfoMapper">
+  <resultMap id="BaseResultMap" type="com.cn.hnust.pojo.InspectionPlanInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="project_no_id" jdbcType="VARCHAR" property="projectNoId" />
+    <result column="plan_name" jdbcType="VARCHAR" property="planName" />
+    <result column="project_no" jdbcType="VARCHAR" property="projectNo" />
+    <result column="add_plan" jdbcType="VARCHAR" property="addPlan" />
+    <result column="w_audit" jdbcType="VARCHAR" property="wAudit" />
+    <result column="is_quality" jdbcType="VARCHAR" property="isQuality" />
+    <result column="y_audit" jdbcType="VARCHAR" property="yAudit" />
+    <result column="update_num" jdbcType="INTEGER" property="updateNum" />
+    <result column="upload_num" jdbcType="INTEGER" property="uploadNum" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, project_no_id, plan_name, project_no, add_plan, w_audit, is_quality, y_audit, 
+    update_num, upload_num, update_date, create_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from inspection_plan_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from inspection_plan_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.hnust.pojo.InspectionPlanInfo">
+    insert into inspection_plan_info (id, project_no_id, plan_name, 
+      project_no, add_plan, w_audit, 
+      is_quality, y_audit, update_num, 
+      upload_num, update_date, create_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{projectNoId,jdbcType=VARCHAR}, #{planName,jdbcType=VARCHAR}, 
+      #{projectNo,jdbcType=VARCHAR}, #{addPlan,jdbcType=VARCHAR}, #{wAudit,jdbcType=VARCHAR}, 
+      #{isQuality,jdbcType=VARCHAR}, #{yAudit,jdbcType=VARCHAR}, #{updateNum,jdbcType=INTEGER}, 
+      #{uploadNum,jdbcType=INTEGER}, #{updateDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.hnust.pojo.InspectionPlanInfo">
+    insert into inspection_plan_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="projectNoId != null">
+        project_no_id,
+      </if>
+      <if test="planName != null">
+        plan_name,
+      </if>
+      <if test="projectNo != null">
+        project_no,
+      </if>
+      <if test="addPlan != null">
+        add_plan,
+      </if>
+      <if test="wAudit != null">
+        w_audit,
+      </if>
+      <if test="isQuality != null">
+        is_quality,
+      </if>
+      <if test="yAudit != null">
+        y_audit,
+      </if>
+      <if test="updateNum != null">
+        update_num,
+      </if>
+      <if test="uploadNum != null">
+        upload_num,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectNoId != null">
+        #{projectNoId,jdbcType=VARCHAR},
+      </if>
+      <if test="planName != null">
+        #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null">
+        #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addPlan != null">
+        #{addPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="wAudit != null">
+        #{wAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="isQuality != null">
+        #{isQuality,jdbcType=VARCHAR},
+      </if>
+      <if test="yAudit != null">
+        #{yAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="updateNum != null">
+        #{updateNum,jdbcType=INTEGER},
+      </if>
+      <if test="uploadNum != null">
+        #{uploadNum,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.hnust.pojo.InspectionPlanInfo">
+    update inspection_plan_info
+    <set>
+      <if test="projectNoId != null">
+        project_no_id = #{projectNoId,jdbcType=VARCHAR},
+      </if>
+      <if test="planName != null">
+        plan_name = #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null">
+        project_no = #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="addPlan != null">
+        add_plan = #{addPlan,jdbcType=VARCHAR},
+      </if>
+      <if test="wAudit != null">
+        w_audit = #{wAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="isQuality != null">
+        is_quality = #{isQuality,jdbcType=VARCHAR},
+      </if>
+      <if test="yAudit != null">
+        y_audit = #{yAudit,jdbcType=VARCHAR},
+      </if>
+      <if test="updateNum != null">
+        update_num = #{updateNum,jdbcType=INTEGER},
+      </if>
+      <if test="uploadNum != null">
+        upload_num = #{uploadNum,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.hnust.pojo.InspectionPlanInfo">
+    update inspection_plan_info
+    set project_no_id = #{projectNoId,jdbcType=VARCHAR},
+      plan_name = #{planName,jdbcType=VARCHAR},
+      project_no = #{projectNo,jdbcType=VARCHAR},
+      add_plan = #{addPlan,jdbcType=VARCHAR},
+      w_audit = #{wAudit,jdbcType=VARCHAR},
+      is_quality = #{isQuality,jdbcType=VARCHAR},
+      y_audit = #{yAudit,jdbcType=VARCHAR},
+      update_num = #{updateNum,jdbcType=INTEGER},
+      upload_num = #{uploadNum,jdbcType=INTEGER},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

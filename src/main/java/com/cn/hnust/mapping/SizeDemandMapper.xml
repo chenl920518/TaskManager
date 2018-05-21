@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.hnust.dao.SizeDemandMapper" >
+  <resultMap id="BaseResultMap" type="com.cn.hnust.pojo.SizeDemand" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_no" property="projectNo" jdbcType="VARCHAR" />
+    <result column="project_no_id" property="projectNoId" jdbcType="VARCHAR" />
+    <result column="project" property="project" jdbcType="VARCHAR" />
+    <result column="number_no" property="numberNo" jdbcType="VARCHAR" />
+    <result column="standard" property="standard" jdbcType="VARCHAR" />
+    <result column="sampling_num" property="samplingNum" jdbcType="VARCHAR" />
+    <result column="accuracy" property="accuracy" jdbcType="VARCHAR" />
+    <result column="process_test" property="processTest" jdbcType="VARCHAR" />
+    <result column="big_goods_test" property="bigGoodsTest" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_no, project_, number_no,standard, sampling_num, accuracy, process_test, 
+    big_goods_test, update_date, create_date,project_no_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from size_demand
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from size_demand
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.hnust.pojo.SizeDemand" >
+    insert into size_demand (id, project_no, project, 
+      number_no, standard, 
+      sampling_num, accuracy, process_test, 
+      big_goods_test, update_date, create_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, #{project,jdbcType=VARCHAR}, 
+      #{numberNo,jdbcType=VARCHAR},  #{standard,jdbcType=VARCHAR}, 
+      #{samplingNum,jdbcType=VARCHAR}, #{accuracy,jdbcType=VARCHAR}, #{processTest,jdbcType=VARCHAR}, 
+      #{bigGoodsTest,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.hnust.pojo.SizeDemand" >
+    insert into size_demand
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectNo != null" >
+        project_no,
+      </if>
+      <if test="projectNoId != null" >
+        project_no_id,
+      </if>
+      <if test="project != null" >
+        project,
+      </if>
+      <if test="numberNo != null" >
+        number_no,
+      </if>
+      <if test="standard != null" >
+        standard,
+      </if>
+      <if test="samplingNum != null" >
+        sampling_num,
+      </if>
+      <if test="accuracy != null" >
+        accuracy,
+      </if>
+      <if test="processTest != null" >
+        process_test,
+      </if>
+      <if test="bigGoodsTest != null" >
+        big_goods_test,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectNo != null" >
+        #{projectNo,jdbcType=VARCHAR},
+      </if>
+       <if test="projectNoId != null" >
+        #{projectNoId,jdbcType=VARCHAR},
+      </if>
+      <if test="numberNo != null" >
+        #{numberNo,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null" >
+        #{project,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="samplingNum != null" >
+        #{samplingNum,jdbcType=VARCHAR},
+      </if>
+      <if test="accuracy != null" >
+        #{accuracy,jdbcType=VARCHAR},
+      </if>
+      <if test="processTest != null" >
+        #{processTest,jdbcType=VARCHAR},
+      </if>
+      <if test="bigGoodsTest != null" >
+        #{bigGoodsTest,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.hnust.pojo.SizeDemand" >
+    update size_demand
+    <set >
+      <if test="projectNo != null" >
+        project_no = #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="project != null" >
+        project = #{project,jdbcType=VARCHAR},
+      </if>
+      <if test="numberNo != null" >
+        number_no = #{numberNo,jdbcType=VARCHAR},
+      </if>
+      <if test="standard != null" >
+        standard = #{standard,jdbcType=VARCHAR},
+      </if>
+      <if test="samplingNum != null" >
+        sampling_num = #{samplingNum,jdbcType=VARCHAR},
+      </if>
+      <if test="accuracy != null" >
+        accuracy = #{accuracy,jdbcType=VARCHAR},
+      </if>
+      <if test="processTest != null" >
+        process_test = #{processTest,jdbcType=VARCHAR},
+      </if>
+      <if test="bigGoodsTest != null" >
+        big_goods_test = #{bigGoodsTest,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.hnust.pojo.SizeDemand" >
+    update size_demand
+    set project_no = #{projectNo,jdbcType=VARCHAR},
+      number_no = #{numberNo,jdbcType=VARCHAR},
+      project = #{project,jdbcType=VARCHAR},
+      standard = #{standard,jdbcType=VARCHAR},
+      sampling_num = #{samplingNum,jdbcType=VARCHAR},
+      accuracy = #{accuracy,jdbcType=VARCHAR},
+      process_test = #{processTest,jdbcType=VARCHAR},
+      big_goods_test = #{bigGoodsTest,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

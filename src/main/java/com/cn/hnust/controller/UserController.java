@@ -1,0 +1,95 @@
+package com.cn.hnust.controller;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cn.hnust.pojo.User;
+import com.cn.hnust.service.IUserService;
+import com.cn.hnust.util.Base64Encode;
+import com.cn.hnust.util.JsonResult;
+/***
+ * 用 户  Controller
+ * @author Administrator
+ *
+ */
+@Controller
+@RequestMapping("/user")
+public class UserController {
+	@Resource
+	private IUserService userService;
+	/**
+	 * 查询以后是否存在
+	 * @param request
+	 * @param model
+	 * @return 
+	 * @return
+	 */
+	@RequestMapping("/showUser")
+	@ResponseBody
+	public JsonResult showUser(HttpServletRequest request,HttpServletResponse response){
+		String userName=request.getParameter("userName");
+	    String password=request.getParameter("password");
+		User user =userService.selectUser(userName, password);
+		JsonResult json =new JsonResult();
+		if(user!=null){
+			json.setOk(true);
+			json.setMessage("登录成功！");
+			json.setData(user);
+		}else{
+			json.setOk(false);
+			json.setMessage("用户名或密码错误！");
+		}	
+		return json;
+	}
+	
+	/**
+	 * 
+	 * @Title:UserController
+	 * @Description:TODO
+	   @author wangyang
+	 * @param request
+	 * @param response
+	 * @return String
+	 * @throws
+	 */
+	@RequestMapping("/ERPshowUser")
+	public String ERPshowUser(HttpServletRequest request,HttpServletResponse response){
+		String userInfo = request.getParameter("userInfo");
+		String name=Base64Encode.getFromBase64(userInfo);
+		String []mad=name.split(",");
+		String userName=mad[0];
+		String password=mad[1];
+
+		User user =userService.selectUser(userName, password);
+			
+		request.setAttribute("userId", user.getId());
+		request.setAttribute("roleNo", user.getRoleNo());
+		request.setAttribute("purchaseNameId", "");
+		request.setAttribute("userName", user.getUserName());
+		return "project_list1";
+	}
+	/**
+	 * 跳转个人中心
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("/toIndex")
+	public String toIndex(HttpServletRequest request,HttpServletResponse response){
+		String userId = request.getParameter("userId");
+		String roleNo=request.getParameter("roleNo");
+		String purchaseNameId=request.getParameter("purchaseNameId");
+        String userName=request.getParameter("userName");
+			
+		request.setAttribute("userId", userId);
+		request.setAttribute("roleNo", roleNo);
+		request.setAttribute("purchaseNameId", purchaseNameId);
+		request.setAttribute("userName", userName);
+		return "select";
+	}
+}

@@ -1,0 +1,271 @@
+package com.cn.hnust.service.impl;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.transaction.Transactional;
+
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cn.hnust.dao.ProjectERPMapper;
+import com.cn.hnust.dao.ProjectTaskMapper;
+import com.cn.hnust.dao.RoleBindDetailMapper;
+import com.cn.hnust.pojo.ProjectERP;
+import com.cn.hnust.pojo.ProjectTask;
+import com.cn.hnust.pojo.RoleBindDetail;
+import com.cn.hnust.service.IProjectTaskService;
+import com.cn.hnust.thread.HttpThread;
+
+@Service
+public class ProjectTaskServiceImpl implements IProjectTaskService {
+
+	@Autowired
+	private ProjectTaskMapper projectTaskMapper;
+
+	@Autowired
+	private RoleBindDetailMapper roleBindDetailMapper;
+
+	@Autowired
+	private ProjectERPMapper projectERPMapper;
+
+	@Override
+	public void addProjectTask(ProjectTask projectTask) {
+		projectTaskMapper.insertSelective(projectTask);
+	}
+
+	@Override
+	public List<ProjectTask> selectProjectTask(ProjectTask projectTask) {
+		return projectTaskMapper.selectProjectTask(projectTask);
+	}
+
+	@Override
+	public List<ProjectTask> selectProjectTaskCount(ProjectTask projectTask) {
+		return projectTaskMapper.selectProjectTaskCount(projectTask);
+	}
+
+	@Override
+	public ProjectTask selectProjectTaskById(Integer id) {
+		return projectTaskMapper.selectByPrimaryKey(id);
+	}
+
+	@Override
+	public void updateProjectTask(ProjectTask projectTask) {
+		projectTaskMapper.updateByPrimaryKeySelective(projectTask);
+	}
+
+	/**
+	 * 统计每个人未完成的数量
+	 */
+	@Override
+	public List<ProjectTask> statisticsProjectTaskNoFinish(
+			ProjectTask projectTask) {
+		return projectTaskMapper.statisticsProjectTaskNoFinish(projectTask);
+	}
+
+	@Override
+	public List<ProjectTask> statisticsProjectTaskFinish(ProjectTask projectTask) {
+		return projectTaskMapper.statisticsProjectTaskFinish(projectTask);
+	}
+
+	@Override
+	public List<ProjectTask> statisticsProjectTaskOnTime(String acceptor) {
+		return projectTaskMapper.statisticsProjectTaskOnTime(acceptor);
+	}
+
+	@Override
+	public List<ProjectTask> statisticsProjectTaskAllFinish(String acceptor) {
+		return projectTaskMapper.statisticsProjectTaskAllFinish(acceptor);
+	}
+
+	@Override
+	public List<ProjectTask> selectMeetingRecordTask(String meetingNo) {
+		return projectTaskMapper.selectMeetingRecordTask(meetingNo);
+	}
+
+	// 统计会议任务未完成的数量
+	@Override
+	public List<ProjectTask> selectMeetingRecordTaskNoFinish(String acceptor) {
+		return projectTaskMapper.selectMeetingRecordTaskNoFinish(acceptor);
+	}
+
+	@Override
+	public List<ProjectTask> selectProjectTaskIfExist(ProjectTask projectTask) {
+		return projectTaskMapper.selectProjectTaskIfExist(projectTask);
+	}
+
+	@Override
+	public ProjectTask selectProjectTaskMaxDate(String userName) {
+		return projectTaskMapper.selectProjectTaskMaxDate(userName);
+	}
+
+	@Override
+	public int hasAlreadyTask(int triggerId, int userId, String projectNo) {
+		return projectTaskMapper.hasAlreadyTask(triggerId, userId, projectNo);
+	}
+
+	@Override
+	public int insertSelective(ProjectTask pro) {
+
+		return projectTaskMapper.insertSelective(pro);
+	}
+
+	@Transactional
+	@Override
+	public void checkNextTask(ProjectTask pro) {
+		RoleBindDetail rbd =  roleBindDetailMapper.checkNextTask(pro.getIndexNum()+1,pro.getId());
+		if(rbd!=null){
+			int roleType = rbd.getRoleType();
+			if(roleType==4||roleType==5||roleType==6||roleType==7){
+				ProjectERP projectErp =  projectERPMapper.selectProjectErpByNo(pro.getProjectNo());
+				
+				if(projectErp!=null){
+					
+					List<String> accepters = new ArrayList<String>();
+					
+					switch (roleType) {
+
+					case 4:
+
+						if (StringUtils.isNotBlank(projectErp.getZhijian1())) {
+							accepters.add(projectErp.getZhijian1());
+
+						}
+						if (StringUtils.isNotBlank(projectErp.getZhijian2())) {
+							accepters.add(projectErp.getZhijian2());
+
+						}
+						saveDetail(accepters, rbd);
+						break;
+					case 5:
+
+						if (StringUtils.isNotBlank(projectErp.getMerchandManager2())) {
+							accepters.add(projectErp.getMerchandManager2());
+						}
+						saveDetail(accepters, rbd);
+						break;
+					case 6:
+						if (StringUtils.isNotBlank(projectErp.getCustomerManager())) {
+							accepters.add(projectErp.getCustomerManager());
+						}
+						saveDetail(accepters, rbd);
+						break;
+					case 7:
+						if (StringUtils.isNotBlank(projectErp.getMerchandManager1())) {
+							accepters.add(projectErp.getMerchandManager1());
+						}
+						saveDetail(accepters, rbd);
+					
+					
+				}
+				}
+			}else{
+				List<RoleBindDetail> ls =  roleBindDetailMapper.selectListByRoleType(roleType);
+				saveData(ls,rbd);
+				
+			}
+			
+		}
+		projectTaskMapper.updateByPrimaryKeySelective(pro);
+		
+	
+		
+	}
+
+	public void saveData(List<RoleBindDetail> list, RoleBindDetail rbd) {
+
+		if (list != null && list.size() > 0) {
+
+			for (int i = 0; i < list.size(); i++) {
+
+				RoleBindDetail rd = list.get(i);
+				ProjectTask pt = new ProjectTask();
+				pt.setInitiator("system");
+				pt.setAccepter(rd.getUserName());
+				pt.setStartTime(new Date());
+				pt.setCreateTime(new Date());
+				pt.setDescription(rbd.getTaskTitle());
+				pt.setTaskStatus("0");
+				pt.setProjectNo(rbd.getProjectNo());
+				pt.setTaskId(rbd.getTaskId());
+				pt.setIndexNum(rbd.getIndexNum());
+
+				Calendar ca = Calendar.getInstance();
+				ca.add(Calendar.DATE, 2);
+				int day = ca.get(Calendar.DAY_OF_WEEK);
+				if (day == 7 || day == 1) {
+					ca.add(Calendar.DATE, 2);
+				}
+				Date finishTime = ca.getTime();
+				pt.setFinishTime(finishTime);
+				projectTaskMapper.insertSelective(pt);
+
+				JSONObject object = JSONObject.fromObject(pt);
+				Map<String, String> parameters = new HashMap<String, String>();
+				parameters.put("projectTask", object.toString());
+				Thread td = new HttpThread(parameters);
+				td.start();
+
+			}
+
+		}
+
+	}
+	
+	
+	public void saveDetail(List<String> accepters, RoleBindDetail rbd) {
+
+		if (accepters.size() > 0) {
+			for (int i = 0; i < accepters.size(); i++) {
+
+				ProjectTask pt = new ProjectTask();
+				pt.setInitiator("system");
+				pt.setAccepter(accepters.get(i));
+				pt.setStartTime(new Date());
+				pt.setCreateTime(new Date());
+				pt.setDescription(rbd.getTaskTitle());
+				pt.setTaskStatus("0");
+				pt.setProjectNo(rbd.getProjectNo());
+				pt.setTaskId(rbd.getTaskId());
+				pt.setIndexNum(rbd.getIndexNum());
+				
+				Calendar ca = Calendar.getInstance();
+				
+				ca.add(Calendar.DATE, 2);
+				
+				int day = ca.get(Calendar.DAY_OF_WEEK);
+				
+				if(day==7||day==1){
+					ca.add(Calendar.DATE, 2);
+				}
+				Date finishTime = ca.getTime();
+			
+				pt.setFinishTime(finishTime);
+				projectTaskMapper.insertSelective(pt);
+				
+				JSONObject object = JSONObject.fromObject(pt);
+				Map<String, String> parameters=new HashMap<String, String>();
+				parameters.put("projectTask", object.toString());
+				//url and json
+				
+				Thread td = new HttpThread(parameters);
+				td.start();
+
+				
+
+			}
+
+		}
+
+	}
+
+}

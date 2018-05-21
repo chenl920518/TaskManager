@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.hnust.dao.InspectionPlanMapper" >
+  <resultMap id="BaseResultMap" type="com.cn.hnust.pojo.InspectionPlan" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="project_no_id" property="projectNoId" jdbcType="VARCHAR" />
+    <result column="project_no" property="projectNo" jdbcType="VARCHAR" />
+    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
+    <result column="parts_no" property="partsNo" jdbcType="VARCHAR" />
+    <result column="version" property="version" jdbcType="VARCHAR" />
+    <result column="file_name" property="fileName" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="describes" property="describes" jdbcType="VARCHAR" />
+    <result column="compactor" property="compactor" jdbcType="VARCHAR" />
+    <result column="auditor" property="auditor" jdbcType="VARCHAR" />
+    <result column="test_type" property="testType" jdbcType="VARCHAR"/>
+    <result column="compactor_date" property="compactorDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, project_no_id, project_no, project_name, parts_no, version, file_name, create_date, 
+    update_date, describes, compactor, auditor, compactor_date,test_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from inspection_plan
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from inspection_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.cn.hnust.pojo.InspectionPlan" >
+    insert into inspection_plan (id, project_no_id, project_no, 
+      project_name, parts_no, version, 
+      file_name, create_date, update_date, 
+      describes, compactor, auditor, 
+      compactor_date)
+    values (#{id,jdbcType=INTEGER}, #{projectNoId,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
+      #{projectName,jdbcType=VARCHAR}, #{partsNo,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, 
+      #{describes,jdbcType=VARCHAR}, #{compactor,jdbcType=VARCHAR}, #{auditor,jdbcType=VARCHAR}, 
+      #{compactorDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.cn.hnust.pojo.InspectionPlan" >
+    insert into inspection_plan
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="projectNoId != null" >
+        project_no_id,
+      </if>
+      <if test="projectNo != null" >
+        project_no,
+      </if>
+      <if test="projectName != null" >
+        project_name,
+      </if>
+      <if test="partsNo != null" >
+        parts_no,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="fileName != null" >
+        file_name,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="describes != null" >
+        describes,
+      </if>
+      <if test="compactor != null" >
+        compactor,
+      </if>
+      <if test="auditor != null" >
+        auditor,
+      </if>
+      <if test="compactorDate != null" >
+        compactor_date,
+      </if>
+      <if test="testType !=null">
+         test_type
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="projectNoId != null" >
+        #{projectNoId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="partsNo != null" >
+        #{partsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="describes != null" >
+        #{describes,jdbcType=VARCHAR},
+      </if>
+      <if test="compactor != null" >
+        #{compactor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditor != null" >
+        #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="compactorDate != null" >
+        #{compactorDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="testType !=null">
+        #{testType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.cn.hnust.pojo.InspectionPlan" >
+    update inspection_plan
+    <set >
+      <if test="projectNoId != null" >
+        project_no_id = #{projectNoId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectNo != null" >
+        project_no = #{projectNo,jdbcType=VARCHAR},
+      </if>
+      <if test="projectName != null" >
+        project_name = #{projectName,jdbcType=VARCHAR},
+      </if>
+      <if test="partsNo != null" >
+        parts_no = #{partsNo,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null" >
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        file_name = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="describes != null" >
+        describes = #{describes,jdbcType=VARCHAR},
+      </if>
+      <if test="compactor != null" >
+        compactor = #{compactor,jdbcType=VARCHAR},
+      </if>
+      <if test="auditor != null" >
+        auditor = #{auditor,jdbcType=VARCHAR},
+      </if>
+      <if test="compactorDate != null" >
+        compactor_date = #{compactorDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.cn.hnust.pojo.InspectionPlan" >
+    update inspection_plan
+    set project_no_id = #{projectNoId,jdbcType=VARCHAR},
+      project_no = #{projectNo,jdbcType=VARCHAR},
+      project_name = #{projectName,jdbcType=VARCHAR},
+      parts_no = #{partsNo,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR},
+      file_name = #{fileName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      describes = #{describes,jdbcType=VARCHAR},
+      compactor = #{compactor,jdbcType=VARCHAR},
+      auditor = #{auditor,jdbcType=VARCHAR},
+      compactor_date = #{compactorDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

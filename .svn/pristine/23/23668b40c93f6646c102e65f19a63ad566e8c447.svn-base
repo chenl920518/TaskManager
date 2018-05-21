@@ -1,0 +1,417 @@
+	package com.cn.hnust.controller;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.cn.hnust.component.RpcHelper;
+import com.cn.hnust.pojo.MeetingRecord;
+import com.cn.hnust.pojo.ProjectTask;
+import com.cn.hnust.pojo.User;
+import com.cn.hnust.service.IMeetingRecordService;
+import com.cn.hnust.service.IProjectTaskService;
+import com.cn.hnust.service.IUserService;
+import com.cn.hnust.util.DateFormat;
+import com.cn.hnust.util.IdGen;
+import com.cn.hnust.util.JsonResult;
+
+@Controller
+@RequestMapping("/meetingRecord")
+public class MeetingRecordController {
+
+	@Autowired
+	private IMeetingRecordService meetingRecordService;
+	
+	@Autowired
+	private IProjectTaskService projectTaskService;
+	
+	@Autowired
+	private IUserService userService; 
+	
+
+	
+	@SuppressWarnings("finally")
+	@RequestMapping("/addMeetingRecord")
+	@ResponseBody
+	public JsonResult addMeetingRecord(HttpServletRequest request,HttpServletResponse response){
+		JsonResult jsonResult=new JsonResult();
+		String projectNo=request.getParameter("projectNo");
+		String meetingName=request.getParameter("meetingName");
+		String meetingDescribe=request.getParameter("meetingDescribe");
+		String initiator=request.getParameter("initiator");
+		List<ProjectTask> projectTaskList=new ArrayList<ProjectTask>();
+	    
+		String meetingTask=request.getParameter("meetingTask");
+	    String accepter=request.getParameter("accepter");
+	    
+	    String meetingTask1=request.getParameter("meetingTask1");
+	    String accepter1=request.getParameter("accepter1");
+	    
+	    String meetingTask2=request.getParameter("meetingTask2");
+	    String accepter2=request.getParameter("accepter2");
+	    
+	    String meetingTask3=request.getParameter("meetingTask3");
+	    String accepter3=request.getParameter("accepter3");
+	    
+	    String meetingTask4=request.getParameter("meetingTask4");
+	    String accepter4=request.getParameter("accepter4");
+	    
+	    String meetingTask5=request.getParameter("meetingTask5");
+	    String accepter5=request.getParameter("accepter5");
+	    
+	    String meetingTask6=request.getParameter("meetingTask6");
+	    String accepter6=request.getParameter("accepter6");
+	    
+	    String meetingTask7=request.getParameter("meetingTask7");
+	    String accepter7=request.getParameter("accepter7");
+	    String meetingNo= IdGen.uuid(); 
+	    if(StringUtils.isNotBlank(meetingTask) && (StringUtils.isNotBlank(accepter) && !accepter.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setAccepter(accepter);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setDescription(meetingTask);
+	    	projectTask.setTaskType("1");
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	     	projectTask.setFinishTime(getDateAfter(new Date(),2));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    
+	    if(StringUtils.isNotBlank(meetingTask1) && (StringUtils.isNotBlank(accepter1) && !accepter1.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setAccepter(accepter1);
+	    	projectTask.setDescription(meetingTask1);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setTaskType("1");
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	    	projectTask.setFinishTime(getDateAfter(new Date(),5));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter1);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter1+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    
+	    if(StringUtils.isNotBlank(meetingTask2) && (StringUtils.isNotBlank(accepter2) && !accepter2.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setTaskType("1");
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setAccepter(accepter2);
+	    	projectTask.setDescription(meetingTask2);
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	    	projectTask.setFinishTime(getDateAfter(new Date(),5));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter2);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter2+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    
+	    if(StringUtils.isNotBlank(meetingTask3) && (StringUtils.isNotBlank(accepter3) && !accepter3.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setTaskType("1");
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setAccepter(accepter3);
+	    	projectTask.setDescription(meetingTask3);
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	    	projectTask.setFinishTime(getDateAfter(new Date(),5));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter3);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter3+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    if(StringUtils.isNotBlank(meetingTask4) && (StringUtils.isNotBlank(accepter4) && !accepter4.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setTaskType("1");
+	    	projectTask.setAccepter(accepter4);
+	    	projectTask.setDescription(meetingTask4);
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	    	projectTask.setFinishTime(getDateAfter(new Date(),5));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter4);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter4+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    if(StringUtils.isNotBlank(meetingTask5) && (StringUtils.isNotBlank(accepter5) && !accepter5.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setTaskType("1");
+	    	projectTask.setAccepter(accepter5);
+	    	projectTask.setDescription(meetingTask5);
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	    	projectTask.setFinishTime(getDateAfter(new Date(),5));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter5);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter5+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    if(StringUtils.isNotBlank(meetingTask6) && (StringUtils.isNotBlank(accepter6) && !accepter6.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setTaskType("1");
+	    	projectTask.setAccepter(accepter6);
+	    	projectTask.setDescription(meetingTask6);
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	    	projectTask.setFinishTime(getDateAfter(new Date(),5));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter6);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter6+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    if(StringUtils.isNotBlank(meetingTask7) && (StringUtils.isNotBlank(accepter7) &&!accepter7.equals("执行人"))){
+	    	ProjectTask projectTask=new ProjectTask();
+	    	projectTask.setProjectNo(projectNo);
+	    	projectTask.setInitiator(initiator);
+	    	projectTask.setTaskStatus("0");
+	    	projectTask.setTaskType("1");
+	    	projectTask.setAccepter(accepter7);
+	    	projectTask.setDescription(meetingTask7);
+	    	projectTask.setCreateTime(new Date());
+	    	projectTask.setStartTime(new Date());
+	    	projectTask.setFinishTime(getDateAfter(new Date(),5));
+	    	projectTask.setMeetingNo(meetingNo);
+	    	projectTaskList.add(projectTask);
+	    	User user=userService.findUserByName(accepter7);
+	    	if(user==null){
+	    		jsonResult.setOk(false);
+				jsonResult.setMessage(accepter7+"不存在,请重新输入");
+				return jsonResult;
+	    	}
+	    }
+	    
+	    
+	    String[] meetingD = meetingDescribe.split("\n");
+	    String meetingDescribeView="";
+	    if(meetingD.length>0){
+	    	for(String temp :meetingD){
+	    		meetingDescribeView+=temp+"<br/>";
+	    	}
+
+	    }
+	    
+		MeetingRecord meetingRecord=new MeetingRecord();
+		meetingRecord.setProjectNo(projectNo);
+		meetingRecord.setMeetingName(meetingName);
+		meetingRecord.setMeetingDescribe(meetingDescribeView);
+		meetingRecord.setProjectTaskList(projectTaskList);
+		meetingRecord.setMeetingNo(meetingNo);
+		meetingRecord.setCreateDate(new Date());
+
+ 	    meetingRecord.setMeetingInputer(initiator);
+ 	    try {
+			int flag=meetingRecordService.addMeetingRecordAndTask(meetingRecord);
+		
+			if(flag==0){
+				jsonResult.setOk(true);
+				jsonResult.setMessage("添加成功");
+				RpcHelper.sendRequest("http://192.168.1.91:8080/ERP-NBEmail/helpServlet?action=publicComment2&className=ExternalinterfaceServlet",meetingRecord);
+//				RpcHelper.sendRequest("http://112.64.174.34:33169/ERP-NBEmail/helpServlet?action=publicComment2&className=ExternalinterfaceServlet",meetingRecord);
+				if(projectTaskList.size()>0){
+					for(int j=0;j<projectTaskList.size();j++){
+						ProjectTask pt = projectTaskList.get(j);
+						RpcHelper.sendRequest("",pt);
+					}	
+				}
+				
+			}else{
+				jsonResult.setOk(false);
+				jsonResult.setMessage("添加失败");
+			}
+			
+		} catch (Exception e) {
+			jsonResult.setOk(true);
+			jsonResult.setMessage("添加失败");
+			e.printStackTrace();
+		}finally {
+			return jsonResult;
+		}
+	
+	}
+	
+	@RequestMapping("/selectMeetingRecordList")
+	public String selectMeetingRecordList(HttpServletRequest request,HttpServletResponse response){
+    	String projectNo=request.getParameter("projectNo");
+    	String userName=request.getParameter("userName");
+    	String userId=request.getParameter("userId");
+    	String roleNo=request.getParameter("roleNo");
+    	MeetingRecord meetingRecord=new MeetingRecord();
+    	meetingRecord.setProjectNo(projectNo);
+    	int pageNumber;
+		if(StringUtils.isNotBlank(request.getParameter("pageNumber"))){
+			pageNumber=Integer.parseInt(request.getParameter("pageNumber"));//第几页,1,2
+		}else{
+			pageNumber=1;
+		}
+    	Cookie[] cookies = request.getCookies();
+  	     if(cookies!=null){
+  	     for(Cookie c :cookies ){
+           if(c.getName().equals("name")){
+          	userName=c.getValue();
+           }
+  	     }
+  	    }
+		Integer pageSize=10;
+		meetingRecord.setPageSize(pageSize);
+		meetingRecord.setPageNumber(pageSize*(pageNumber-1));
+		
+		meetingRecord.setSearchName(userName);
+		
+		if(userName.equals("system")|| userName.equals("jerrylong")||userName.equals("Jiangwenlong")||
+			userName.equals("ninazhao")|| userName.equals("wangweiping")||userName.equals("SISI")||userName.equals("yanggong")){
+			meetingRecord.setSearchName(null);
+		}
+		
+		
+		List<MeetingRecord> meetingRecordList=meetingRecordService.selectMeetingRecordList(meetingRecord);
+		for (int i = 0; i < meetingRecordList.size(); i++) {
+			int taskNum=projectTaskService.selectMeetingRecordTask(meetingRecordList.get(i).getMeetingNo()).size();
+			meetingRecordList.get(i).setTaskNum(taskNum);
+		}
+	    Integer totalCount = meetingRecordService.selectMeetingRecordListCount(meetingRecord).size();//查询记录条数
+	    int countPage = 0;
+		if(totalCount!=null){
+			 countPage=(totalCount-1)/10+1;
+		}
+		request.setAttribute("roleNo", roleNo);
+	    request.setAttribute("userName", userName);
+	    request.setAttribute("userId", userId);
+	    request.setAttribute("pageSize", pageSize);
+	    request.setAttribute("pageNumber", pageNumber);
+	    request.setAttribute("totalCount", totalCount);
+	    request.setAttribute("countPage", countPage);
+	    request.setAttribute("meetingRecordList", meetingRecordList);
+	    return "meeting_record";
+	}
+	
+	@RequestMapping("/selectMeetingRecordDetails")
+	public String selectMeetingRecordDetails(HttpServletRequest request,HttpServletResponse response){
+		String userName=request.getParameter("userName");
+		String userId=request.getParameter("userId");
+		String roleNo=request.getParameter("roleNo");
+		String meetingNo=request.getParameter("meetingNo");
+		MeetingRecord meetingRecord=meetingRecordService.selectMeetingRecordByMeetingNo(meetingNo);
+		//查询这个会议的任务
+		List<ProjectTask> projectTaskList=projectTaskService.selectMeetingRecordTask(meetingNo);
+		
+		for(ProjectTask pt :projectTaskList ){
+			if("1".equals(pt.getTaskStatus())){
+				try {
+					pt.setOperatorTimeView(DateFormat.date2String(pt.getOperatorTime()));
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+		
+		meetingRecord.setProjectTaskList(projectTaskList);
+		request.setAttribute("meetingRecord", meetingRecord);
+		request.setAttribute("roleNo", roleNo);
+	    request.setAttribute("userName", userName);
+	    request.setAttribute("userId", userId);
+	    return "meeting_record_details";
+	}
+	
+	 public static Date getDateAfter(Date d,int day){  
+	   Calendar now =Calendar.getInstance();  
+	   now.setTime(d);  
+	   now.set(Calendar.DATE,now.get(Calendar.DATE)+day);  
+	   return now.getTime();  
+	 }  
+	 
+	 /**
+	  * 跳转会议录入页面
+	  * @param request
+	  * @param response
+	  * @return
+	  */
+	 @RequestMapping("/inputMeetingRecord")
+	 public String toInputMeetingRecord(HttpServletRequest request,HttpServletResponse response){
+		String projectNo = request.getParameter("projectNo");
+		String roleNo = request.getParameter("roleNo");
+		String userId = request.getParameter("userId");
+		String userName=request.getParameter("userName");
+		
+		User user=userService.selectUserByName(userName);
+	    if(user!=null){
+	    	userId=String.valueOf(user.getId());
+	    	roleNo=String.valueOf(user.getRoleNo());
+			request.setAttribute("roleNo", roleNo);
+		    request.setAttribute("userId", userId);
+	    }
+	    if(StringUtils.isNotBlank(projectNo)){
+	    	request.setAttribute("projectNo", projectNo);
+	    }
+	    request.setAttribute("userName", userName);
+		return "input_meeting_record";
+		 
+	 } 
+}

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cn.hnust.dao.IUserDao" >
+  <resultMap id="BaseResultMap" type="com.cn.hnust.pojo.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="role_no" property="roleNo" jdbcType="VARCHAR" />
+    <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+    <result column="true_name" property="trueName" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="pwd" property="password" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,role_no, role_name,true_name,user_name, pwd,job
+  </sql>
+  <select id="selectUser" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from email_user
+    where 
+      user_name = #{userName,jdbcType=VARCHAR}
+    AND
+      pwd = #{password,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectUserByName" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from email_user
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+  <select id="findUserByName" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from email_user
+    where  (role_name like CONCAT('%', #{userName}, '%')  OR
+			true_name like CONCAT('%', #{userName}, '%') OR
+			user_name like CONCAT('%', #{userName}, '%') 
+		   )
+  </select>
+  
+  <select id="selectAllUser" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from email_user
+  </select>
+  
+  <select id="selectUserByType" resultMap="BaseResultMap">
+  
+   select 
+       id,user_name
+    from email_user where role_no = #{roleNo,jdbcType=INTEGER}
+  
+  </select>
+  
+</mapper>

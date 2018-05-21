@@ -1,0 +1,51 @@
+package com.cn.hnust.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cn.hnust.dao.ProjectERPMapper;
+import com.cn.hnust.pojo.ProjectERP;
+import com.cn.hnust.service.IProjectERPService;
+@Service
+public class ProjectERPServiceImpl implements IProjectERPService {
+    
+	@Autowired
+	private ProjectERPMapper projectERPMapper;
+	@Override
+	public void addProjectERP(ProjectERP projectERP) {
+		projectERPMapper.insertSelective(projectERP);
+	}
+	@Override
+	public List<ProjectERP> selectAllProjectERP() {
+		return projectERPMapper.selectAllProjectERP();
+	}
+	@Override
+	public ProjectERP selectProjectErpByNo(String projectNo) {
+		return projectERPMapper.selectProjectErpByNo(projectNo);
+	}
+	@Override
+	public void updateProjectErp(ProjectERP projectErp) {
+		projectERPMapper.updateByPrimaryKeySelective(projectErp);
+	}
+	@Override
+	public List<ProjectERP> selectCondition() {
+		
+		return projectERPMapper.selectCondition();
+	}
+	@Override
+	public List<ProjectERP> selectMeetingStatus(int conditionType,
+			String meetingName) {
+		return projectERPMapper.selectMeetingStatus(conditionType, meetingName);
+	}
+	@Override
+	public List<ProjectERP> selectConditionFirst() {
+		return projectERPMapper.selectConditionFirst();
+	}
+	@Override
+	public List<ProjectERP> selectProjectQualityComplaint() {
+		return projectERPMapper.selectProjectQualityComplaint();
+	}
+
+}

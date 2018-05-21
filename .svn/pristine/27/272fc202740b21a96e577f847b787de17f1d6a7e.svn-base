@@ -1,0 +1,13 @@
+package com.cn.hnust.dao;
+
+import java.util.List;
+
+import com.cn.hnust.pojo.StatusEnter;
+
+public interface StatusEnterMapper {
+    int insert(StatusEnter record);
+
+    int insertSelective(StatusEnter record);
+    
+    List<StatusEnter>selectProjectStatusEnter(String projectNo);
+}

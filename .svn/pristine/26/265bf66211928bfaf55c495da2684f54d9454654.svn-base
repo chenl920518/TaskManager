@@ -1,0 +1,124 @@
+package com.cn.hnust.service.impl.task;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.cn.hnust.pojo.Project;
+import com.cn.hnust.pojo.ProjectERP;
+import com.cn.hnust.pojo.User;
+import com.cn.hnust.service.IProjectERPService;
+import com.cn.hnust.service.IProjectService;
+import com.cn.hnust.service.IUserService;
+import com.cn.hnust.util.IdGen;
+
+@Component
+public class CRMProjectDateTask {
+	@Autowired
+	private IProjectService projectService;
+	@Autowired 
+	private IProjectERPService projectERPService;
+	@Autowired
+	private IUserService userService;
+	
+    //定时任务的同步数据(项目信息)
+	@Transactional
+	public void syncProjectDate() throws Exception{
+		List<ProjectERP> erpList=new ArrayList<ProjectERP>();
+		List<Project> projectList=new ArrayList<Project>();
+		List<Project> insertProjectList=new ArrayList<Project>(); //需要插入的数据集合
+		erpList=projectERPService.selectAllProjectERP();
+		projectList=projectService.selectAllProject();
+		boolean flag=false;
+        //执行业务逻辑
+        for(int i=0;i<erpList.size();i++){
+        	ProjectERP  erpProject= erpList.get(i);
+        	Project project = null;
+			boolean bool = false;
+			for (int j = 0; j < projectList.size(); j++) {
+				project = projectList.get(j);
+				//项目号匹配成功就做更新操作(导进来的数据已存在)
+				if(erpProject.getProjectNo().equals(project.getProjectNo())){
+					User user=new User();
+					User purchaseUser =new User();
+					//1.MerchandManager1 跟单销售,MerchandManager2 采购
+					if(StringUtils.isNotBlank(erpProject.getMerchandManager1())){
+						user=userService.selectUserByName(erpProject.getMerchandManager1());
+						if(user!=null){
+							project.setEmailUserId(user.getId());
+				    	}
+					}
+					if(StringUtils.isNoneBlank(erpProject.getMerchandManager2())){
+						purchaseUser=userService.selectUserByName(erpProject.getMerchandManager2());
+						if(purchaseUser!=null){
+							project.setPurchaseId(purchaseUser.getId());
+				    	}	
+					}
+					projectService.updateProjectInfo(project);
+					bool = true;
+					break;
+				}
+			}
+			//项目号匹配不成功,将不匹配的项目号添加到项目表里面
+			if(!bool){
+				Project insertProject=new Project();
+				User user=new User();
+				User purchaseUser =new User();
+				//1.MerchandManager1 跟单销售,MerchandManager2 采购
+				if(StringUtils.isNotBlank(erpProject.getMerchandManager1())){
+					user=userService.selectUserByName(erpProject.getMerchandManager1());
+					if(user!=null){
+						insertProject.setEmailUserId(user.getId());
+			    	}
+				}
+				if(StringUtils.isNotBlank(erpProject.getMerchandManager2())){
+					purchaseUser=userService.selectUserByName(erpProject.getMerchandManager2());
+					if(purchaseUser!=null){
+						insertProject.setPurchaseId(purchaseUser.getId());
+			    	}	
+				}
+				insertProject.setId(IdGen.uuid());
+			    insertProject.setProjectNo(erpProject.getProjectNo());
+			    insertProject.setProjectName(erpProject.getProjectNameC());
+			    insertProject.setDeliveryDate(null); //交期
+			    insertProject.setDeliveryStatus(0);
+			    insertProject.setWarningStatus(0);
+			    insertProject.setImportance(0);
+			    insertProject.setFinish(0);
+			    insertProject.setStage(0);
+			    insertProject.setPoDate(null);  //PO日期
+			    insertProject.setActualStartDate(null);  //原定交货日期
+			    insertProject.setScheduledDate(null);  //实际开工日期
+			    insertProject.setCreateDate(new Date());
+				insertProjectList.add(insertProject);
+			}
+        }
+        //移除不符合条件的数据
+        if(insertProjectList!=null && insertProjectList.size()>0){
+        	Iterator<Project> iter = insertProjectList.iterator();
+        	while (iter.hasNext()) {
+    	       	Project project = iter.next();
+    	        if (StringUtils.isBlank(project.getProjectNo())) {
+    	             iter.remove();
+    	        } 
+        	}
+        	      
+        }
+        
+        //批量插入(去除项目号为空的数据)
+        if(!flag){
+        	if(insertProjectList!=null && insertProjectList.size()>0){
+     	   	   projectService.batchAddProject(insertProjectList);
+     	   	   flag=true;
+     	    }
+       	    
+        }
+	    insertProjectList.clear();
+	    System.err.println(new Date());
+	}
+}

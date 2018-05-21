@@ -1,0 +1,11 @@
+#picPath=/usr/local/apache-tomcat-7.0.72/webapps/uploadimg
+#picUrl=http://localhost:8080/uploadimg
+#picPath=\D:\\tools\\apache-tomcat-7.0.70-windows-x86\\apache-tomcat-7.0.70\\wtpwebapps\\uploadimg
+
+
+picPath=/usr/local/tomcat/webapps/uploadimg
+picUrl=http://112.64.174.34/uploadimg
+
+
+
+
